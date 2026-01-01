@@ -1,0 +1,234 @@
+:root {
+    --poop-fill-color: #8B4513; /* Saddle Brown */
+    --poop-stroke-color: #654321; /* Darker brown */
+    --poop-shadow-color: rgba(0,0,0,0.3);
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background: radial-gradient(circle at center, #2e1a3a 0%, #1a1a2e 100%); /* Enhanced dark background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    position: relative;
+}
+
+/* --- Heart Container Styles --- */
+.heart-container {
+    position: absolute;
+    /* Responsive sizing */
+    width: min(400px, 90vw); /* Max 400px, but responsive to 90% viewport width */
+    height: auto; /* Allow height to adjust based on aspect ratio */
+    aspect-ratio: 1 / 1; /* Maintain square aspect ratio */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.heart-svg {
+    width: 100%;
+    height: 100%;
+}
+
+#heartPath {
+    stroke-dasharray: var(--heart-path-length); /* Kept for potential dynamic use, but overridden by stroke-dashoffset: 0 */
+    stroke-dashoffset: 0; /* Fully drawn from the start */
+    filter:
+        drop-shadow(0 0 10px #ffc0cb)
+        drop-shadow(0 0 20px #ff6699)
+        drop-shadow(0 0 30px #ff4d88); /* Fully glowing from the start */
+    stroke: #ff004c; /* Ensure initial stroke color is set and matches pulse start */
+
+    animation: pulseHeart 1.5s infinite alternate ease-in-out; /* Only pulsing, no initial draw or glow animation */
+    /* Removed animation-delay: 0.5s; */
+}
+
+@keyframes drawHeart {
+    to { stroke-dashoffset: 0; }
+}
+
+@keyframes glowIn {
+    to {
+        filter:
+            drop-shadow(0 0 10px #ffc0cb) /* Slightly stronger glow */
+            drop-shadow(0 0 20px #ff6699)
+            drop-shadow(0 0 30px #ff4d88);
+    }
+}
+
+@keyframes pulseHeart {
+    0%, 100% {
+        transform: scale(1);
+        filter:
+            drop-shadow(0 0 10px #ffc0cb)
+            drop-shadow(0 0 20px #ff6699)
+            drop-shadow(0 0 30px #ff4d88);
+        stroke: #ff004c;
+    }
+    50% {
+        transform: scale(1.05);
+        filter:
+            drop-shadow(0 0 15px #ffc0cb)
+            drop-shadow(0 0 25px #ff6699)
+            drop-shadow(0 0 40px #ff4d88);
+        stroke: #ff69b4;
+    }
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion) {
+    #heartPath, .poop-graphic, .poop-face-part {
+        animation: none !important;
+        transition: none !important;
+    }
+    #heartPath {
+        stroke-dashoffset: 0 !important;
+        filter: drop-shadow(0 0 10px #ffc0cb) drop-shadow(0 0 20px #ff6699) drop-shadow(0 0 30px #ff4d88) !important;
+    }
+    .poop-graphic, .poop-face-part {
+        opacity: 1 !important;
+        transform: scale(1) !important;
+    }
+    .message, .action-button, .poop-message {
+        animation: none !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+}
+
+/* --- Message Styling (Heart) --- */
+.message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    animation: fadeIn 1s ease-in forwards; /* Message fades in after 1s */
+    animation-delay: 1s;
+    font-size: clamp(1.2em, 5vw, 2.2em); /* Responsive font size */
+    font-weight: bold;
+    color: #ffb3e0;
+    text-align: center;
+    white-space: nowrap;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5); /* Stronger shadow for readability */
+    transition: opacity 0.5s ease-out;
+    pointer-events: none;
+}
+
+/* --- Action Button Styling --- */
+.action-button {
+    position: absolute;
+    bottom: 5%; /* Placed lower */
+    padding: 10px 20px; /* Slightly smaller padding */
+    font-size: clamp(0.9em, 3.5vw, 1.2em); /* Slightly smaller font size */
+    font-weight: bold;
+    color: #fff;
+    background-color: #6a0572; /* Deep purple */
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4); /* Slightly deeper shadow */
+    transition: all 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    animation: fadeIn 1s ease-in forwards; /* Button fades in after 2s */
+    animation-delay: 2s;
+    min-width: 160px; /* Ensure button isn't too small */
+}
+
+.action-button:hover {
+    background-color: #8e24aa; /* Lighter purple on hover */
+    transform: translateY(-5px); /* More pronounced lift */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5); /* Stronger hover shadow */
+}
+
+.action-button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.3); /* Softer active shadow */
+}
+
+/* --- Poop Container Styles --- */
+.poop-container {
+    position: absolute;
+    /* Responsive sizing */
+    width: min(400px, 90vw);
+    height: auto;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+}
+
+.poop-container.hidden {
+    pointer-events: none;
+}
+
+.poop-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 8px 15px var(--poop-shadow-color)); /* Slightly stronger shadow */
+}
+
+.poop-graphic {
+    opacity: 0;
+    transform: translateY(0) rotate(0);
+    animation: none;
+}
+
+#poopBodyPath {
+    stroke-dasharray: var(--poop-body-path-length);
+    stroke-dashoffset: var(--poop-body-path-length);
+    animation: drawPoopBody 2s ease-out forwards;
+    animation-delay: 0.5s;
+}
+
+@keyframes drawPoopBody {
+    to { stroke-dashoffset: 0; }
+}
+
+.poop-face-part {
+    opacity: 0;
+    transform: scale(0);
+    transform-origin: center;
+    animation: poopFacePop 0.3s ease-out forwards;
+}
+
+@keyframes poopFacePop {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes poopJiggle {
+    0%, 100% { transform: rotate(0deg) translateY(0px); }
+    25% { transform: rotate(2deg) translateY(-3px); } /* Slightly more jiggle */
+    50% { transform: rotate(-2deg) translateY(3px); }
+    75% { transform: rotate(1deg) translateY(-2px); }
+}
+
+.poop-message {
+    position: absolute;
+    bottom: 15%; /* Adjusted for better placement relative to poop */
+    opacity: 0;
+    animation: fadeIn 1s ease-in forwards;
+    font-size: clamp(0.8em, 3.5vw, 1.4em); /* Smaller font size */
+    font-weight: bold;
+    color: #ffd700; /* Gold color */
+    text-align: center;
+    white-space: nowrap;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.4); /* Stronger shadow */
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; pointer-events: auto; }
+}
